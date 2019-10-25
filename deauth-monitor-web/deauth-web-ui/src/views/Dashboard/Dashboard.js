@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 // react plugin for creating charts
 import ChartistGraph from "react-chartist";
 // @material-ui/core
@@ -22,10 +22,22 @@ import {
 } from "variables/charts.js";
 
 import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
+import Axios from "axios";
 
 const useStyles = makeStyles(styles);
 
 const Dashboard = () => {
+  const [deauthAttacks, setDeauthAttacks] = useState([]);
+  const [lastAttack, setLastAttack] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      const response = await Axios.get('http://localhost:5000/');
+      setDeauthAttacks(response.data.deathAttacks);
+      setLastAttack(response.data.lastAttack);
+    })();
+    }, []);
+
   const classes = useStyles();
   return (
     <div>
@@ -37,7 +49,7 @@ const Dashboard = () => {
                 <Icon>watch_later</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>Time of Previous Attack</p>
-              <h3 className={classes.cardTitle}>Oct 10 12:43 MST</h3>
+              <h3 className={classes.cardTitle}>{lastAttack.timeOccurred}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -56,7 +68,7 @@ const Dashboard = () => {
               <p className={classes.cardCategory}>
                 Duration of Previous Attack
               </p>
-              <h3 className={classes.cardTitle}>13m 27s</h3>
+              <h3 className={classes.cardTitle}>{lastAttack.attackDuration}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -73,7 +85,7 @@ const Dashboard = () => {
                 <Icon>person_outline</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>Attackers MAC Address</p>
-              <h3 className={classes.cardTitle}>00:14:22:01:23:45</h3>
+              <h3 className={classes.cardTitle}>{lastAttack.attackerMAC}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -90,7 +102,7 @@ const Dashboard = () => {
                 <Icon>verified_user</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>Client MAC Address</p>
-              <h3 className={classes.cardTitle}>00:99:99:00:99:00</h3>
+              <h3 className={classes.cardTitle}>{lastAttack.clientMAC}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
