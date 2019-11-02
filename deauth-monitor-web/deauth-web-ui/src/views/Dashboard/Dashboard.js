@@ -1,42 +1,67 @@
 import React, { useState, useEffect } from "react";
-// react plugin for creating charts
 import ChartistGraph from "react-chartist";
-// @material-ui/core
 import { makeStyles } from "@material-ui/core/styles";
 import Icon from "@material-ui/core/Icon";
-// @material-ui/icons
 import AccessTime from "@material-ui/icons/AccessTime";
-// core components
-import GridItem from "components/Grid/GridItem.js";
-import GridContainer from "components/Grid/GridContainer.js";
-import Table from "components/Table/Table.js";
-import Card from "components/Card/Card.js";
-import CardHeader from "components/Card/CardHeader.js";
-import CardIcon from "components/Card/CardIcon.js";
-import CardBody from "components/Card/CardBody.js";
-import CardFooter from "components/Card/CardFooter.js";
-
-import {
-  emailsSubscriptionChart,
-  completedTasksChart
-} from "variables/charts.js";
-
-import styles from "assets/jss/material-dashboard-react/views/dashboardStyle.js";
 import Axios from "axios";
+import moment from 'moment';
+
+import GridItem from "../../components/Grid/GridItem.js";
+import GridContainer from "../../components/Grid/GridContainer.js";
+import Table from "../../components/Table/Table.js";
+import Card from "../../components/Card/Card.js";
+import CardHeader from "../../components/Card/CardHeader.js";
+import CardIcon from "../../components/Card/CardIcon.js";
+import CardBody from "../../components/Card/CardBody.js";
+import CardFooter from "../../components/Card/CardFooter.js";
+import { initialBarChart, initialLineChart } from "../../variables/charts.js";
+import styles from "../../assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
 const useStyles = makeStyles(styles);
 
 const Dashboard = () => {
-  const [deauthAttacks, setDeauthAttacks] = useState([]);
   const [lastAttack, setLastAttack] = useState({});
+  const [tableData, setTableData] = useState([]);
+  const [barChartData, setBarChartData] = useState({ labels: [], series: [] });
+  const [lineChartData, setLineChartData] = useState();
 
   useEffect(() => {
     (async () => {
       const response = await Axios.get('http://localhost:5000/');
-      setDeauthAttacks(response.data.deathAttacks);
-      setLastAttack(response.data.lastAttack);
+      updateTableData(response.data['deauthAttacks']);
+      setLastAttack(response.data['lastAttack']);
     })();
     }, []);
+
+  /**
+   * Updates the table state with deauthentication attack history
+   * @param deauthAttacks
+   */
+  const updateTableData = deauthAttacks => {
+    // Format the deauth attack history data to be displayed in the table and update the table data state
+    const deauthTableData = [];
+    deauthAttacks.forEach(deauthAttack => {
+      const { id, timeOccurred, attackDuration, attackerMAC, clientMAC } = deauthAttack;
+      deauthTableData.push([id, timeOccurred, attackDuration, attackerMAC, clientMAC]);
+    });
+    setTableData(deauthTableData);
+  };
+
+  /**
+   * Updates bar chart statewith data from deauthentication attack history
+   * @param deauthAttacks
+   */
+  const updateBarChartData = deauthAttacks => {
+    // TODO
+  };
+
+  /**
+   * Updates line chart state with data from deauthentication attack history for that current day
+   * @param deauthAttacks
+   */
+  const updateLineChartData = deauthAttacks => {
+    // TODO
+  };
 
   const classes = useStyles();
   return (
@@ -49,7 +74,7 @@ const Dashboard = () => {
                 <Icon>watch_later</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>Time of Previous Attack</p>
-              <h3 className={classes.cardTitle}>{lastAttack.timeOccurred}</h3>
+              <h3 className={classes.cardTitle}>{lastAttack['timeOccurred']}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -68,7 +93,7 @@ const Dashboard = () => {
               <p className={classes.cardCategory}>
                 Duration of Previous Attack
               </p>
-              <h3 className={classes.cardTitle}>{lastAttack.attackDuration}</h3>
+              <h3 className={classes.cardTitle}>{lastAttack['attackDuration']}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -85,7 +110,7 @@ const Dashboard = () => {
                 <Icon>person_outline</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>Attackers MAC Address</p>
-              <h3 className={classes.cardTitle}>{lastAttack.attackerMAC}</h3>
+              <h3 className={classes.cardTitle}>{lastAttack['attackerMAC']}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -102,7 +127,7 @@ const Dashboard = () => {
                 <Icon>verified_user</Icon>
               </CardIcon>
               <p className={classes.cardCategory}>Client MAC Address</p>
-              <h3 className={classes.cardTitle}>{lastAttack.clientMAC}</h3>
+              <h3 className={classes.cardTitle}>{lastAttack['clientMAC']}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
@@ -119,11 +144,11 @@ const Dashboard = () => {
             <CardHeader color="warning">
               <ChartistGraph
                 className="ct-chart"
-                data={emailsSubscriptionChart.data}
+                data={initialBarChart.data}
                 type="Bar"
-                options={emailsSubscriptionChart.options}
-                responsiveOptions={emailsSubscriptionChart.responsiveOptions}
-                listener={emailsSubscriptionChart.animation}
+                options={initialBarChart.options}
+                responsiveOptions={initialBarChart.responsiveOptions}
+                listener={initialBarChart.animation}
               />
             </CardHeader>
             <CardBody>
@@ -145,10 +170,10 @@ const Dashboard = () => {
             <CardHeader color="warning">
               <ChartistGraph
                 className="ct-chart"
-                data={completedTasksChart.data}
+                data={initialLineChart.data}
                 type="Line"
-                options={completedTasksChart.options}
-                listener={completedTasksChart.animation}
+                options={initialLineChart.options}
+                listener={initialLineChart.animation}
               />
             </CardHeader>
             <CardBody>
@@ -187,50 +212,7 @@ const Dashboard = () => {
                   "Attacker MAC",
                   "Client MAC"
                 ]}
-                tableData={[
-                  [
-                    "1",
-                    "Oct 12 12:43 MST",
-                    "27m 22s",
-                    "00-14-22-01-23-45",
-                    "00-99-99-00-99-00"
-                  ],
-                  [
-                    "2",
-                    "Oct 12 12:43 MST",
-                    "512m 02s",
-                    "00-14-22-01-23-45",
-                    "00-99-99-00-99-00"
-                  ],
-                  [
-                    "3",
-                    "Oct 11 12:43 MST",
-                    "15m 00s",
-                    "00-23-01-14-98-19",
-                    "00-99-99-00-99-00"
-                  ],
-                  [
-                    "4",
-                    "Oct 11 12:43 MST",
-                    "75m 14s",
-                    "00-14-01-14-98-19",
-                    "00-99-99-00-99-00"
-                  ],
-                  [
-                    "5",
-                    "Oct 11 12:43 MST",
-                    "81m 57s",
-                    "00-14-22-01-23-45",
-                    "00-99-99-00-99-00"
-                  ],
-                  [
-                    "6",
-                    "Oct 9 12:43 MST",
-                    "02m 14s",
-                    "00-14-22-01-23-45",
-                    "00-99-99-00-99-00"
-                  ]
-                ]}
+                tableData={tableData}
               />
             </CardBody>
           </Card>

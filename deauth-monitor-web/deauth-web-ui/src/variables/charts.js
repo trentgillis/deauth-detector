@@ -3,88 +3,16 @@
 // #############################
 var Chartist = require("chartist");
 
-// ##############################
-// // // variables used to create animation on charts
-// #############################
-var delays = 80,
-  durations = 500;
-var delays2 = 80,
-  durations2 = 500;
+const delays = 80;
+const durations = 500;
+const delays2 = 80;
+const durations2 = 500;
 
-// ##############################
-// // // Daily Sales
-// #############################
-
-const dailySalesChart = {
+// This is getting used for attack duration history
+const initialBarChart = {
   data: {
-    labels: ["M", "T", "W", "T", "F", "S", "S"],
-    series: [[12, 17, 7, 17, 23, 18, 38]]
-  },
-  options: {
-    lineSmooth: Chartist.Interpolation.cardinal({
-      tension: 0
-    }),
-    low: 0,
-    high: 50, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
-    chartPadding: {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0
-    }
-  },
-  // for animation
-  animation: {
-    draw: function(data) {
-      if (data.type === "line" || data.type === "area") {
-        data.element.animate({
-          d: {
-            begin: 600,
-            dur: 700,
-            from: data.path
-              .clone()
-              .scale(1, 0)
-              .translate(0, data.chartRect.height())
-              .stringify(),
-            to: data.path.clone().stringify(),
-            easing: Chartist.Svg.Easing.easeOutQuint
-          }
-        });
-      } else if (data.type === "point") {
-        data.element.animate({
-          opacity: {
-            begin: (data.index + 1) * delays,
-            dur: durations,
-            from: 0,
-            to: 1,
-            easing: "ease"
-          }
-        });
-      }
-    }
-  }
-};
-
-// ##############################
-// // // Email Subscriptions
-// #############################
-
-// This is getting used for attack duration history (this data will need to be set on componentDidMount)
-const emailsSubscriptionChart = {
-  data: {
-    labels: [
-      "Oct 5",
-      "Oct 5",
-      "Oct 6",
-      "Oct 7",
-      "Oct 7",
-      "Oct 8",
-      "Oct 8",
-      "Oct 10",
-      "Oct 10",
-      "Oct 10"
-    ],
-    series: [[542, 443, 320, 780, 553, 453, 326, 434, 568, 610]]
+    labels: [],
+    series: [[]]
   },
   options: {
     axisX: {
@@ -129,15 +57,11 @@ const emailsSubscriptionChart = {
   }
 };
 
-// ##############################
-// // // Completed Tasks
-// #############################
-
-// Being used to show the attack duration history during the last 24 hours (also will need to do component did mount stuff)
-const completedTasksChart = {
+// This is used for attack duration history for a single day
+const initialLineChart = {
   data: {
-    labels: ["12am", "3pm", "6pm", "9pm", "12pm", "3am", "6am", "9am"],
-    series: [[230, 750, 450, 300, 280, 240, 200, 190]]
+    labels: [],
+    series: [[]]
   },
   options: {
     lineSmooth: Chartist.Interpolation.cardinal({
@@ -184,7 +108,6 @@ const completedTasksChart = {
 };
 
 module.exports = {
-  dailySalesChart,
-  emailsSubscriptionChart,
-  completedTasksChart
+  initialBarChart,
+  initialLineChart,
 };
