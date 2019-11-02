@@ -6,7 +6,7 @@ CORS(app, resources={r'*': {'origins': '*'}})
 
 mock_data = {
   "lastAttack": {
-    "timeOccurred": "Oct 12 12:45 MST",
+    "timeOccurred": "1572640710795",
     "attackDuration": "13m 27s",
     "attackerMAC": "00:14:22:01:23:45",
     "clientMAC": "00:99:99:00:99:00",
@@ -14,35 +14,35 @@ mock_data = {
   'deauthAttacks': [
     {
       'id': 1,
-      'timeOccurred': 'Oct 12 12:43 MST',
+      'timeOccurred': '1572640710795',
       'attackDuration': '27m 22s',
       'attackerMAC': '00:14:22:01:23:45',
       'clientMAC': '00:99:99:00:99:00'
     },
     {
-      'id': 1,
-      'timeOccurred': 'Oct 12 12:43 MST',
+      'id': 2,
+      'timeOccurred': '1572640710795',
       'attackDuration': '27m 22s',
       'attackerMAC': '00:14:22:01:23:45',
       'clientMAC': '00:99:99:00:99:00'
     },
     {
-      'id': 1,
-      'timeOccurred': 'Oct 12 12:43 MST',
+      'id': 3,
+      'timeOccurred': '1572640710795',
       'attackDuration': '27m 22s',
       'attackerMAC': '00:14:22:01:23:45',
       'clientMAC': '00:99:99:00:99:00'
     },
     {
-      'id': 1,
-      'timeOccurred': 'Oct 12 12:43 MST',
+      'id': 4,
+      'timeOccurred': '1572640710795',
       'attackDuration': '27m 22s',
       'attackerMAC': '00:14:22:01:23:45',
       'clientMAC': '00:99:99:00:99:00'
     },
     {
-      'id': 1,
-      'timeOccurred': 'Oct 12 12:43 MST',
+      'id': 5,
+      'timeOccurred': '1572640710795',
       'attackDuration': '27m 22s',
       'attackerMAC': '00:14:22:01:23:45',
       'clientMAC': '00:99:99:00:99:00'
