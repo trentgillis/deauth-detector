@@ -1,58 +1,45 @@
+import sys
 from flask import Flask, jsonify
+from bson.json_util import dumps
 from flask_cors import CORS
+from pymongo import MongoClient
+from db_utils import reset_db, populate_db_with_mock_data
 
 app = Flask(__name__)
+
+# Allow all origins
 CORS(app, resources={r'*': {'origins': '*'}})
 
-mock_data = {
-  "lastAttack": {
-    "timeOccurred": "1572640710795",
-    "attackDuration": "13m 27s",
-    "attackerMAC": "00:14:22:01:23:45",
-    "clientMAC": "00:99:99:00:99:00",
-  },
-  'deauthAttacks': [
-    {
-      'id': 1,
-      'timeOccurred': '1572640710795',
-      'attackDuration': '27m 22s',
-      'attackerMAC': '00:14:22:01:23:45',
-      'clientMAC': '00:99:99:00:99:00'
-    },
-    {
-      'id': 2,
-      'timeOccurred': '1572640710795',
-      'attackDuration': '27m 22s',
-      'attackerMAC': '00:14:22:01:23:45',
-      'clientMAC': '00:99:99:00:99:00'
-    },
-    {
-      'id': 3,
-      'timeOccurred': '1572640710795',
-      'attackDuration': '27m 22s',
-      'attackerMAC': '00:14:22:01:23:45',
-      'clientMAC': '00:99:99:00:99:00'
-    },
-    {
-      'id': 4,
-      'timeOccurred': '1572640710795',
-      'attackDuration': '27m 22s',
-      'attackerMAC': '00:14:22:01:23:45',
-      'clientMAC': '00:99:99:00:99:00'
-    },
-    {
-      'id': 5,
-      'timeOccurred': '1572640710795',
-      'attackDuration': '27m 22s',
-      'attackerMAC': '00:14:22:01:23:45',
-      'clientMAC': '00:99:99:00:99:00'
-    }
-  ]
-}
+# MongoDB Setup
+client = MongoClient('mongodb://localhost:27017')
+db = client['deauth_attacks']
+attacksCollection = db.attacks
+lastAttackCollection = db.lastAttack
+
 
 @app.route('/')
 def index():
-  return jsonify(mock_data)
+    try:
+        deauthAttacks = attacksCollection.find()
+
+        if deauthAttacks.count() > 0:
+            response = {
+                "lastAttack": deauthAttacks[deauthAttacks.count() - 1],
+                "deauthAttacks": deauthAttacks
+            }
+            return dumps(response)
+        else:
+            return '', 404
+    except:
+        return '', 500
+
 
 if __name__ == '__main__':
-  app.run()
+    if sys.argv[1] == 'mock_data':
+        reset_db()
+        populate_db_with_mock_data()
+
+    if sys.argv[1] == 'reset_db':
+        reset_db()
+
+    app.run()
