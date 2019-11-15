@@ -1,0 +1,2 @@
+if the attack is only against 1 target can we get both mac's?
+if the attacker is connected to the network with one card and another is sending the deauth can we ip scan?
