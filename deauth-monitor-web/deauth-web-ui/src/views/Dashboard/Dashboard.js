@@ -1,37 +1,42 @@
 import React, { useState, useEffect } from "react";
-import ChartistGraph from "react-chartist";
-import { makeStyles } from "@material-ui/core/styles";
-import Icon from "@material-ui/core/Icon";
-import AccessTime from "@material-ui/icons/AccessTime";
 import Axios from "axios";
 import moment from 'moment';
+import * as _ from 'lodash';
 
-import GridItem from "../../components/Grid/GridItem.js";
+import LastAttackInfo from "../../components/DeauthDetector/LastAttackInfo";
+import AttackInfoBarChart from '../../components/DeauthDetector/AttackInfoBarChart';
+import AttackInfoLineChart from '../../components/DeauthDetector/AttackInfoLineChart';
+import AttackInfoTable from '../../components/DeauthDetector/AttackInfoTable';
 import GridContainer from "../../components/Grid/GridContainer.js";
-import Table from "../../components/Table/Table.js";
-import Card from "../../components/Card/Card.js";
-import CardHeader from "../../components/Card/CardHeader.js";
-import CardIcon from "../../components/Card/CardIcon.js";
-import CardBody from "../../components/Card/CardBody.js";
-import CardFooter from "../../components/Card/CardFooter.js";
-import { initialBarChart, initialLineChart } from "../../variables/charts.js";
-import styles from "../../assets/jss/material-dashboard-react/views/dashboardStyle.js";
 
-const useStyles = makeStyles(styles);
 
 const Dashboard = () => {
-  const [lastAttack, setLastAttack] = useState({});
+  const [lastAttackData, setLastAttackData] = useState({});
   const [tableData, setTableData] = useState([]);
   const [barChartData, setBarChartData] = useState({ labels: [], series: [] });
-  const [lineChartData, setLineChartData] = useState();
+  const [lineChartData, setLineChartData] = useState({ labels: [], series: [] });
 
   useEffect(() => {
     (async () => {
       const response = await Axios.get('http://localhost:5000/');
-      updateTableData(response.data['deauthAttacks']);
-      setLastAttack(response.data['lastAttack']);
+      updateLastAttackData(response.data.lastAttack);
+      updateBarChartData(response.data.deauthAttacks);
+      updateLineChartData(response.data.deauthAttacks);
+      updateTableData(response.data.deauthAttacks);
     })();
-    }, []);
+  }, []);
+
+
+  /**
+   * Updates the last attack state with the details of the most recent attack
+   * @param lastAttack 
+   */
+  const updateLastAttackData = lastAttackData => {
+    let { timestamp } = lastAttackData;
+    timestamp = moment.unix(timestamp).format('MM/DD/YYYY HH:mm');
+    lastAttackData.timestamp = timestamp;
+    setLastAttackData(lastAttackData);
+  };
 
   /**
    * Updates the table state with deauthentication attack history
@@ -39,20 +44,54 @@ const Dashboard = () => {
    */
   const updateTableData = deauthAttacks => {
     // Format the deauth attack history data to be displayed in the table and update the table data state
+    let attackNumber = 0;
     const deauthTableData = [];
     deauthAttacks.forEach(deauthAttack => {
-      const { id, timeOccurred, attackDuration, attackerMAC, clientMAC } = deauthAttack;
-      deauthTableData.push([id, timeOccurred, attackDuration, attackerMAC, clientMAC]);
+      // Increment attack number
+      attackNumber++;
+
+      // Destructure attack data from API results and add to the table data
+      const { timestamp, type, victim, router } = deauthAttack;
+      const formattedTimestamp = moment.unix(timestamp).format('MM/DD/YYY HH:mm');
+      deauthTableData.push([attackNumber, formattedTimestamp, type, victim, router]);
     });
     setTableData(deauthTableData);
   };
 
   /**
-   * Updates bar chart statewith data from deauthentication attack history
+   * Updates bar chart state with data from deauthentication attack history
    * @param deauthAttacks
    */
   const updateBarChartData = deauthAttacks => {
-    // TODO
+    let deauthBarChartData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let deauthBarChartLabels = [];
+    const currentTime = moment(moment().valueOf());
+
+    // Update bar chart data with the number of attacks that have happened over the last 10 days
+    _.forEach(deauthAttacks, deauthAttack => {
+      // Get the number of days since the attack happened
+      const timeOfAttack = moment.unix(deauthAttack.timestamp);
+      const differenceInDays = currentTime.diff(timeOfAttack, 'days');
+
+      // Exit the loop once the number of days since the attack is greater than 9
+      if (differenceInDays > 9) {
+        return false;
+      } else {
+        deauthBarChartData[differenceInDays]++;
+      }
+    });
+
+    // Update the table labels with the correct dates
+    _.forEach(deauthBarChartData, (value, index) => {
+      const label = moment().subtract(index, 'd').format('MM/DD/YY');
+      deauthBarChartLabels.push(label);
+    });
+
+    // Reverse chart data and labels so that they appear in ascending order
+    deauthBarChartData = _.reverse(deauthBarChartData);
+    deauthBarChartLabels = _.reverse(deauthBarChartLabels);
+
+    setBarChartData({ labels: deauthBarChartLabels, series: [deauthBarChartData] });
   };
 
   /**
@@ -60,163 +99,46 @@ const Dashboard = () => {
    * @param deauthAttacks
    */
   const updateLineChartData = deauthAttacks => {
-    // TODO
+    let deauthLineChartData = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let deauthLineChartLabels = [];
+    const currentTime = moment(moment().valueOf());
+
+    // Update line chart data with the number of attacks that have happened over the last 10 days
+    _.forEach(deauthAttacks, deauthAttack => {
+      // Get the number of days since the attack happened
+      const timeOfAttack = moment.unix(deauthAttack.timestamp);
+      const differenceInHours = currentTime.diff(timeOfAttack, 'hours');
+
+      // Exit the loop once the number of days since the attack is greater than 9
+      if (differenceInHours > 11) {
+        return false;
+      } else {
+        deauthLineChartData[differenceInHours]++;
+      }
+    });
+
+    // Update the table labels with the correct dates
+    _.forEach(deauthLineChartData, (value, index) => {
+      const label = moment().subtract(index, 'h').format('hh a');
+      deauthLineChartLabels.push(label);
+    });
+
+    // Format chart data and labels so that they appear in ascending order
+    deauthLineChartData = _.reverse(deauthLineChartData);
+    deauthLineChartLabels = _.reverse(deauthLineChartLabels);
+
+    setLineChartData({ labels: deauthLineChartLabels, series: [deauthLineChartData] });
   };
 
-  const classes = useStyles();
   return (
     <div>
+      <LastAttackInfo lastAttackData={lastAttackData} />
       <GridContainer>
-        <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="warning" stats icon>
-              <CardIcon color="warning">
-                <Icon>watch_later</Icon>
-              </CardIcon>
-              <p className={classes.cardCategory}>Time of Previous Attack</p>
-              <h3 className={classes.cardTitle}>{lastAttack['timeOccurred']}</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <Icon>info</Icon>
-                Time that most recent de-authentication attack occurred.
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="warning" stats icon>
-              <CardIcon color="warning">
-                <Icon>slow_motion_video</Icon>
-              </CardIcon>
-              <p className={classes.cardCategory}>
-                Duration of Previous Attack
-              </p>
-              <h3 className={classes.cardTitle}>{lastAttack['attackDuration']}</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <Icon>info</Icon>
-                Duration that most recent de-authentication attack occurred.
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="warning" stats icon>
-              <CardIcon color="warning">
-                <Icon>person_outline</Icon>
-              </CardIcon>
-              <p className={classes.cardCategory}>Attackers MAC Address</p>
-              <h3 className={classes.cardTitle}>{lastAttack['attackerMAC']}</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <Icon>info</Icon>
-                MAC address of the most recent attacker
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={6} md={3}>
-          <Card>
-            <CardHeader color="success" stats icon>
-              <CardIcon color="success">
-                <Icon>verified_user</Icon>
-              </CardIcon>
-              <p className={classes.cardCategory}>Client MAC Address</p>
-              <h3 className={classes.cardTitle}>{lastAttack['clientMAC']}</h3>
-            </CardHeader>
-            <CardFooter stats>
-              <div className={classes.stats}>
-                <Icon>info</Icon>
-                MAC address of the client
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
+        <AttackInfoBarChart barChartData={barChartData} />
+        <AttackInfoLineChart lineChartData={lineChartData} />
       </GridContainer>
       <GridContainer>
-        <GridItem xs={12} sm={12} md={6}>
-          <Card chart>
-            <CardHeader color="warning">
-              <ChartistGraph
-                className="ct-chart"
-                data={initialBarChart.data}
-                type="Bar"
-                options={initialBarChart.options}
-                responsiveOptions={initialBarChart.responsiveOptions}
-                listener={initialBarChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>Attack Durations History</h4>
-              <p className={classes.cardCategory}>
-                Durations of previous de-authentication attacks in minutes for
-                the last 10 days
-              </p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <Icon>access_time</Icon> Last updated 5 minutes ago
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-        <GridItem xs={12} sm={12} md={6}>
-          <Card chart>
-            <CardHeader color="warning">
-              <ChartistGraph
-                className="ct-chart"
-                data={initialLineChart.data}
-                type="Line"
-                options={initialLineChart.options}
-                listener={initialLineChart.animation}
-              />
-            </CardHeader>
-            <CardBody>
-              <h4 className={classes.cardTitle}>
-                Todays Attack Duration History
-              </h4>
-              <p className={classes.cardCategory}>
-                Durations of de-authentication attacks in minutes for the last
-                24 hours
-              </p>
-            </CardBody>
-            <CardFooter chart>
-              <div className={classes.stats}>
-                <AccessTime /> campaign sent 2 days ago
-              </div>
-            </CardFooter>
-          </Card>
-        </GridItem>
-      </GridContainer>
-      <GridContainer>
-        <GridItem xs={12} sm={12} md={12}>
-          <Card>
-            <CardHeader color="warning">
-              <h4 className={classes.cardTitleWhite}>Attack History</h4>
-              <p className={classes.cardCategoryWhite}>
-                New employees on 15th September, 2016
-              </p>
-            </CardHeader>
-            <CardBody>
-              <Table
-                tableHeaderColor="warning"
-                tableHead={[
-                  "Attack No",
-                  "Time Occurred",
-                  "Attacker Duration",
-                  "Attacker MAC",
-                  "Client MAC"
-                ]}
-                tableData={tableData}
-              />
-            </CardBody>
-          </Card>
-        </GridItem>
+        <AttackInfoTable tableData={tableData} />
       </GridContainer>
     </div>
   );

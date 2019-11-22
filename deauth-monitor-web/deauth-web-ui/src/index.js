@@ -28,11 +28,13 @@ import "assets/css/material-dashboard-react.css?v=1.8.0";
 const hist = createBrowserHistory();
 
 ReactDOM.render(
-  <Router history={hist}>
-    <Switch>
-      <Route path="/admin" component={Admin} />
-      <Redirect from="/" to="/admin/dashboard" />
-    </Switch>
-  </Router>,
+  (
+    <Router history={hist}>
+      <Switch>
+        <Route path="/admin" component={Admin} />
+        <Redirect from="/" to="/admin/dashboard" />
+      </Switch>
+    </Router>
+  ),
   document.getElementById("root")
 );
