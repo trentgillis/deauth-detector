@@ -5,34 +5,148 @@ client = MongoClient('mongodb://localhost:27017')
 mock_data = {
     'deauthAttacks': [
         {
-            'timeOccurred': '1572640710795',
-            'attackDuration': '27m 22s',
-            'attackerMAC': '00:14:22:01:23:45',
-            'clientMAC': '00:99:99:00:99:00'
+            'timestamp': '1574455535',
+            'type': 'deauth',
+            'victim': '00:14:22:01:23:45',
+            'router': '00:99:99:00:99:00',
+            'routerInfo': {
+                'oui': '12:34:56',
+                'company_name': 'Comcast',
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            },
+            'victimInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            }
         },
         {
-            'timeOccurred': '1572640710795',
-            'attackDuration': '27m 22s',
-            'attackerMAC': '00:14:22:01:23:45',
-            'clientMAC': '00:99:99:00:99:00'
+            'timestamp': '1574455535',
+            'type': 'deauth',
+            'victim': '00:14:22:01:23:45',
+            'router': '00:99:99:00:99:00',
+            'routerInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            },
+            'victimInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            }
         },
         {
-            'timeOccurred': '1572640710795',
-            'attackDuration': '27m 22s',
-            'attackerMAC': '00:14:22:01:23:45',
-            'clientMAC': '00:99:99:00:99:00'
+            'timestamp': '1574455535',
+            'type': 'deauth',
+            'victim': '00:14:22:01:23:45',
+            'router': '00:99:99:00:99:00',
+            'routerInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            },
+            'victimInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            }
         },
         {
-            'timeOccurred': '1572640710795',
-            'attackDuration': '27m 22s',
-            'attackerMAC': '00:14:22:01:23:45',
-            'clientMAC': '00:99:99:00:99:00'
+            'timestamp': '1574455535',
+            'type': 'deauth',
+            'victim': '00:14:22:01:23:45',
+            'router': '00:99:99:00:99:00',
+            'routerInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            },
+            'victimInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            }
         },
         {
-            'timeOccurred': '1572640710795',
-            'attackDuration': '27m 20s',
-            'attackerMAC': '00:14:22:01:23:45',
-            'clientMAC': '00:99:99:00:99:00'
+            'timestamp': '1574455535',
+            'type': 'deauth',
+            'victim': '00:14:22:01:23:45',
+            'router': '00:99:99:00:99:00',
+            'routerInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            },
+            'victimInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            }
+        },
+        {
+            'timestamp': '1574469119',
+            'type': 'deauth',
+            'victim': '00:14:22:01:23:45',
+            'router': '00:99:99:00:99:00',
+            'routerInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            },
+            'victimInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            }
+        },
+        {
+            'timestamp': '1574469119',
+            'type': 'deauth',
+            'victim': '00:14:22:01:23:45',
+            'router': '00:99:99:00:99:00',
+            'routerInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            },
+            'victimInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            }
+        },
+        {
+            'timestamp': '1574469119',
+            'type': 'deauth',
+            'victim': '00:14:22:01:23:45',
+            'router': '00:99:99:00:99:00',
+            'routerInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            },
+            'victimInfo': {
+                "oui": "12:34:56",
+                'company_name': "Comcast",
+                "company_address": "123 Main Street",
+                "country_code": "US"
+            }
         }
     ]
 }
@@ -49,7 +163,6 @@ def populate_db_with_mock_data():
 
     db = client['deauth_attacks']
     attacks = db.attacks
-    lastAttack = db.lastAttack
 
     try:
         attacks.insert_many(mock_data['deauthAttacks'])

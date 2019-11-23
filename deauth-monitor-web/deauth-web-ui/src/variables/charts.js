@@ -1,25 +1,13 @@
-// ##############################
-// // // javascript library for creating charts
-// #############################
 var Chartist = require("chartist");
 
-const delays = 80;
-const durations = 500;
-const delays2 = 80;
-const durations2 = 500;
-
 // This is getting used for attack duration history
-const initialBarChart = {
-  data: {
-    labels: [],
-    series: [[]]
-  },
+const barChartOptions = {
   options: {
     axisX: {
       showGrid: false
     },
     low: 0,
-    high: 1000,
+    high: 60,
     chartPadding: {
       top: 0,
       right: 5,
@@ -45,8 +33,8 @@ const initialBarChart = {
       if (data.type === "bar") {
         data.element.animate({
           opacity: {
-            begin: (data.index + 1) * delays2,
-            dur: durations2,
+            begin: (data.index + 1) * 80,
+            dur: 500,
             from: 0,
             to: 1,
             easing: "ease"
@@ -58,7 +46,7 @@ const initialBarChart = {
 };
 
 // This is used for attack duration history for a single day
-const initialLineChart = {
+const lineChartOptions = {
   data: {
     labels: [],
     series: [[]]
@@ -68,7 +56,7 @@ const initialLineChart = {
       tension: 0
     }),
     low: 0,
-    high: 1000, // creative tim: we recommend you to set the high sa the biggest value + something for a better look
+    high: 40,
     chartPadding: {
       top: 0,
       right: 0,
@@ -95,8 +83,8 @@ const initialLineChart = {
       } else if (data.type === "point") {
         data.element.animate({
           opacity: {
-            begin: (data.index + 1) * delays,
-            dur: durations,
+            begin: (data.index + 1) * 80,
+            dur: 500,
             from: 0,
             to: 1,
             easing: "ease"
@@ -108,6 +96,6 @@ const initialLineChart = {
 };
 
 module.exports = {
-  initialBarChart,
-  initialLineChart,
+  barChartOptions,
+  lineChartOptions,
 };
