@@ -3,7 +3,6 @@ import ChartistGraph from "react-chartist";
 import { makeStyles } from "@material-ui/core/styles";
 import AccessTime from "@material-ui/icons/AccessTime";
 import moment from 'moment';
-import * as _ from 'lodash';
 
 import GridItem from "../../components/Grid/GridItem.js";
 import Card from "../../components/Card/Card.js";

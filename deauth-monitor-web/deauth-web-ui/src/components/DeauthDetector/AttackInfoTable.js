@@ -1,6 +1,5 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import * as _ from 'lodash';
 
 import GridItem from "../../components/Grid/GridItem.js";
 import Table from "../../components/Table/Table.js";
