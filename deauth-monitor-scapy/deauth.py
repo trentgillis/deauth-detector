@@ -19,7 +19,7 @@ attacks = db.attacks
 HARDCODED_ROUTER_MAC = "20:4e:7f:0e:df:46"
 
 # Monitor mode wifi card
-monitor_device = os.environ['monitorDevice']
+monitor_device = os.environ.get('monitorDevice')
 
 class DeauthenticationDetector:
     def __init__(self, *args, **kwargs):
