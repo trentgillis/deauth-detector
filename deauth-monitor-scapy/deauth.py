@@ -2,6 +2,7 @@ import sys
 import time
 import scapy.all as scapy
 import json
+import os
 
 from pymongo import MongoClient
 from maclookup import ApiClient
@@ -16,6 +17,9 @@ attacks = db.attacks
 
 # Router mac
 HARDCODED_ROUTER_MAC = "20:4e:7f:0e:df:46"
+
+# Monitor mode wifi card
+monitor_device = os.environ['monitorDevice']
 
 class DeauthenticationDetector:
     def __init__(self, *args, **kwargs):
@@ -105,9 +109,9 @@ def main(*args, **kwargs):
     return
 
 if __name__ == '__main__':
-    if len(sys.argv) == 2:
+    if len(sys.argv) == 1:
         print(f"Started monitoring on {sys.argv[1]}")
         print("Press CTRL+C to exit")
-        main(iface=sys.argv[1])
+        main(iface=monitor_device)
     else:
         print(f" [ Error ] Please Provide Monitor Mode Interface Name Also \n\n\t:~# sudo {sys.argv[0]} mon0 ")
