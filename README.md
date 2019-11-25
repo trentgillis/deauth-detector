@@ -9,32 +9,22 @@
 
 ## Steps
 
-1. Start monitor mode on wifi card to create 'wlan1mon'
+1. Download [BalenaEtcher](https://www.balena.io/etcher/)
 
-```
-sudo airmon-ng start wlan1
-```
+2. Download the RaspberryPi - Deauthentication Detection image from [here]()
 
-2. set environmental variable with monitor mode device name
+3. Use BalenaEtcher to burn the Deauthencation Detection .img to an sd card
+
+4. Boot up the raspberrypi with a monitor mode enabled wifi card
+
+5. set environmental variable with monitor mode device name
 
 ```
 export monitorDevice="wlan1mon"
 ```
 
-3. Run the deploy.sh bash script
+6. Run the deploy.sh bash script
 
 ```
 sudo -E bash -c './deploy.sh'
 ```
-
-## troubleshooting
-
-If you get the following error
-
-```
-[ Error ] Please provide monitor mode interface name 
-```
-
-Change the monitorDevice environmental variable to the proper monitor mode enabled device.
-
-
