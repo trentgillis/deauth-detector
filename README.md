@@ -1,4 +1,4 @@
-## Prerequisuites
+## Prerequisites
 
 * Python3
 * pip
