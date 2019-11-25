@@ -24,7 +24,7 @@ export monitorDevice="wlan1mon"
 3. Run the deploy.sh bash script
 
 ```
-./deploy.sh
+sudo -E bash -c './deploy.sh'
 ```
 
 ## troubleshooting

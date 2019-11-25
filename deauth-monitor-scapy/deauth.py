@@ -95,13 +95,13 @@ class DeauthenticationDetector:
         '''
         mac_info = mac_client.get(mac_address.replace(":", ""))
 
-        return json.dumps({
+        return {
             'oui': mac_info.vendor_details.oui,
             'is_private': mac_info.vendor_details.is_private,
             'company_name': mac_info.vendor_details.company_name,
             'company_address': mac_info.vendor_details.company_address,
             'country_code': mac_info.vendor_details.country_code
-        })
+        }
 
 
 def main(*args, **kwargs):
