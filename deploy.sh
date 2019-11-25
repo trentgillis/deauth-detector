@@ -1,3 +1,5 @@
+airmon-ng start wlan1
+
 # Start the scapy application
 cd deauth-monitor-scapy
 pip3 install -r requirements.txt
