@@ -96,13 +96,13 @@ const LastAttackInfo = ({ lastAttackData }) => {
               <CardIcon color="success">
                 <Icon>person_outline</Icon>
               </CardIcon>
-              <p className={classes.cardCategory}>Victim's Router OUI</p>
+              <p className={classes.cardCategory}>Victim's Device OUI</p>
               <h3 className={classes.cardTitle}>{lastAttackData.victimInfo ? lastAttackData.victimInfo.oui : ''}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
                 <Icon>info</Icon>
-                OUI of the victim's router.
+                OUI of the victim device.
               </div>
             </CardFooter>
           </Card>
@@ -113,13 +113,13 @@ const LastAttackInfo = ({ lastAttackData }) => {
               <CardIcon color="success">
                 <Icon>verified_user</Icon>
               </CardIcon>
-              <p className={classes.cardCategory}>Victim's Router Company Name</p>
+              <p className={classes.cardCategory}>Victim's Device Company Name</p>
               <h3 className={classes.cardTitle}>{lastAttackData.victimInfo ? lastAttackData.victimInfo.company_name : ''}</h3>
             </CardHeader>
             <CardFooter stats>
               <div className={classes.stats}>
                 <Icon>info</Icon>
-                Company that manufactured the victim's router.
+                Company that manufactured the victim device.
               </div>
             </CardFooter>
           </Card>
