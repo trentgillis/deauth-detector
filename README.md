@@ -1,11 +1,11 @@
 ## Prerequisites
 
-* Python3
+* Python 3
 * pip
 * npm
-* node
-* aircrack-ng
-* mongodb
+* Node.js
+* Aircrack-ng
+* MongoDB
 
 ## Steps
 
