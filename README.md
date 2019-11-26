@@ -60,3 +60,7 @@ git pull origin master
 sudo -E bash -c './deploy.sh'
 ```
 9. Once installation concludes, navigate to localhost:3000 via a web browser to view the running dashboard
+
+## Demonstration Video
+
+[https://youtu.be/SVwhGE7bZN8](https://youtu.be/SVwhGE7bZN8)
